@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2020 PX4 Development Team. All rights reserved.
+ *   Copyright (c) 2021 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,18 +32,27 @@
  ****************************************************************************/
 
 /**
- * @file flight_mode_manager_params.c
+ * @file FlightTaskParabola.hpp
+ *
+ * Flight task for flying a parabolic trajectory
+ *
+ * @author Andrew Ilersich <andrew.ilersich@mail.utoronto.ca>
+ * @author Katrina Cecco <katrina.cecco@mail.utoronto.ca>
  */
 
-/**
- * Parabola control sub-mode
- *
- * The supported sub-modes are:
- * 0 Parabola task deactivated
- * 1 Parabola task activated
- *
- * @value 0 Parabola Off
- * @value 1 Parabola On
- * @group Parabola Control
- */
-PARAM_DEFINE_INT32(PARA_MODE, 0);
+#pragma once
+
+#include "FlightTask.hpp"
+
+class FlightTaskParabola : public FlightTask
+{
+public:
+  FlightTaskParabola() = default;
+  virtual ~FlightTaskParabola() = default;
+
+  bool update();
+  bool activate(vehicle_local_position_setpoint_s last_setpoint);
+
+private:
+  float _origin_z{0.f};
+};

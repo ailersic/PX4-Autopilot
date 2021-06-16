@@ -159,5 +159,6 @@ private:
 
 	DEFINE_PARAMETERS(
 		(ParamInt<px4::params::MPC_POS_MODE>) _param_mpc_pos_mode
+		(ParamInt<px4::params::PARA_MODE>) _param_para_mode
 	);
 };

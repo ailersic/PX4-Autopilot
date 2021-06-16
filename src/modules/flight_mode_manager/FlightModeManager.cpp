@@ -257,6 +257,40 @@ void FlightModeManager::start_flight_task()
 		}
 
 	}
+	
+	// parabola control in stabilize mode
+	if (_vehicle_status_sub.get().nav_state == vehicle_status_s::NAVIGATION_STATE_STAB || task_failure) {
+		should_disable_task = false;
+		FlightTaskError error = FlightTaskError::NoError;
+
+		switch (_param_para_mode.get()) {
+		case 1:
+			error = switchTask(FlightTaskIndex::Parabola);
+			break;
+
+		case 0:
+		default:
+			if (_param_para_mode.get() != 0) {
+				PX4_ERR("MPC_POS_MODE %" PRId32 " invalid, resetting", _param_para_mode.get());
+				_param_para_mode.set(0);
+				_param_para_mode.commit();
+			}
+			break;
+		}
+
+		if (error != FlightTaskError::NoError) {
+			if (prev_failure_count == 0) {
+				PX4_WARN("Parabola activation failed with error: %s", errorToString(error));
+			}
+
+			task_failure = true;
+			_task_failure_count++;
+
+		} else {
+			check_failure(task_failure, vehicle_status_s::NAVIGATION_STATE_STAB);
+			task_failure = false;
+		}
+	}
 
 	// manual position control
 	if (_vehicle_status_sub.get().nav_state == vehicle_status_s::NAVIGATION_STATE_POSCTL || task_failure) {
