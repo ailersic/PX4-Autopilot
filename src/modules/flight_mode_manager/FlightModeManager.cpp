@@ -271,7 +271,7 @@ void FlightModeManager::start_flight_task()
 		case 0:
 		default:
 			if (_param_para_mode.get() != 0) {
-				PX4_ERR("MPC_POS_MODE %" PRId32 " invalid, resetting", _param_para_mode.get());
+				PX4_ERR("PARA_MODE %" PRId32 " invalid, resetting", _param_para_mode.get());
 				_param_para_mode.set(0);
 				_param_para_mode.commit();
 			}
